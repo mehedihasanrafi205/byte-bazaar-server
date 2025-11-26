@@ -55,11 +55,13 @@ async function run() {
 
     app.get("/addedProducts", async (req, res) => {
       const email = req.query.email;
-      result = await productsCollection
-        .find({ email: email })
+      const result = await productsCollection
+        .find({ email })
         .sort({ created_at: -1 })
         .toArray();
-      res.send(result);
+      // convert _id to string
+      const formatted = result.map((p) => ({ ...p, _id: p._id.toString() }));
+      res.send(formatted);
     });
 
     app.delete("/products/:id", async (req, res) => {
