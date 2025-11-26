@@ -50,9 +50,24 @@ async function run() {
         .sort({ created_at: -1 })
         .limit(8)
         .toArray();
-        res.send(result)
+      res.send(result);
     });
 
+    app.get("/addedProducts", async (req, res) => {
+      const email = req.query.email;
+      result = await productsCollection
+        .find({ email: email })
+        .sort({ created_at: -1 })
+        .toArray();
+      res.send(result);
+    });
+
+    app.delete("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      result = await productsCollection.deleteOne(query);
+      res.send(result);
+    });
     console.log("Connected to MongoDB!");
   } catch (err) {
     console.error(err);
