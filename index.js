@@ -6,7 +6,16 @@ const port = process.env.PORT || 4000;
 require("dotenv").config();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://byte-bazaar-phi.vercel.app", 
+      "*"
+    ],
+    credentials: true,
+  })
+);
 
 const uri = process.env.URI;
 
@@ -59,7 +68,7 @@ async function run() {
         .find({ email })
         .sort({ created_at: -1 })
         .toArray();
-      // convert _id to string
+     
       const formatted = result.map((p) => ({ ...p, _id: p._id.toString() }));
       res.send(formatted);
     });
